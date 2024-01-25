@@ -8,7 +8,13 @@ go get -u github.com/gin-gonic/gin
 go run main.go
 ```
 ## curlで確認
+- Ping
 ```
 curl localhost:8080/ping
 {"message":"pong"}
+```
+- FindAll関数
+```
+$ curl http://localhost:8080/items
+{"data":[{"ID":1,"Name":"商品1","Price":1000,"Description":"説明1","SoldOut":false},{"ID":2,"Name":"商品2","Price":2000,"Description":"説明2","SoldOut":true},{"ID":3,"Name":"商品3","Price":3000,"Description":"説明3","SoldOut":false}]}
 ```
