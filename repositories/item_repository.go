@@ -1,11 +1,15 @@
 package repositories
 
-import "gin-fleamarket/models"
+import (
+	"errors"
+	"gin-fleamarket/models"
+)
 
 // インターフェースの定義
 // リポジトリが満たすべきメソッドの定義を記述
 type IItemRepository interface {
 	FindAll() (*[]models.Item, error)
+	FindById(itemId uint) (*models.Item, error)
 }
 
 // 上記インターフェースを満たす具体的な実装
@@ -19,6 +23,17 @@ func NewItemMemoryRepository(items []models.Item) IItemRepository {
 	return &ItemMemoryRepository{items: items}
 }
 
+// 商品の一覧を取得するメソッド
 func (r *ItemMemoryRepository) FindAll() (*[]models.Item, error) {
 	return &r.items, nil
+}
+
+// 商品IDによる検索を行うメソッド
+func (r *ItemMemoryRepository) FindById(itemId uint) (*models.Item, error) {
+	for _, item := range r.items {
+		if item.ID == itemId {
+			return &item, nil
+		}
+	}
+	return nil, errors.New("item not found")
 }
