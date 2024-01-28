@@ -10,6 +10,7 @@ import (
 type IItemRepository interface {
 	FindAll() (*[]models.Item, error)
 	FindById(itemId uint) (*models.Item, error)
+	Create(newItem models.Item) (*models.Item, error)
 }
 
 // 上記インターフェースを満たす具体的な実装
@@ -36,4 +37,11 @@ func (r *ItemMemoryRepository) FindById(itemId uint) (*models.Item, error) {
 		}
 	}
 	return nil, errors.New("item not found")
+}
+
+// 商品を新規登録するメソッド
+func (r *ItemMemoryRepository) Create(newItem models.Item) (*models.Item, error) {
+	newItem.ID = uint(len(r.items) + 1)
+	r.items = append(r.items, newItem)
+	return &newItem, nil
 }

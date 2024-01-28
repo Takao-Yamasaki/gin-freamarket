@@ -28,9 +28,12 @@ func main() {
 			"message": "pong",
 		})
 	})
+
 	// 第二引数に実行する関数そのものを渡す
 	r.GET("/items", itemController.FindAll)
 	r.GET("/items/:id", itemController.FindById)
+	r.POST("/items", itemController.Create)
+
 	//8080でサーバーを起動
 	r.Run("localhost:8080")
 }
