@@ -47,6 +47,7 @@ func (r *ItemMemoryRepository) Create(newItem models.Item) (*models.Item, error)
 	return &newItem, nil
 }
 
+// 商品情報を更新するメソッド
 func (r *ItemMemoryRepository) Update(updateItem models.Item) (*models.Item, error) {
 	for i, v := range r.items {
 		if v.ID == updateItem.ID {
@@ -54,5 +55,5 @@ func (r *ItemMemoryRepository) Update(updateItem models.Item) (*models.Item, err
 			return &r.items[i], nil
 		}
 	}
-	return nil, errors.New("Unexpected error")
+	return nil, errors.New("unexpected error")
 }
