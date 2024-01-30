@@ -23,18 +23,19 @@ func main() {
 	// ginのデフォルトルーターを指定し、rに格納
 	r := gin.Default()
 	// ルーターにエンドポイントを追加
+	// 第二引数に実行する関数そのものを渡す
+	itemRouter := r.Group("/items")
+	itemRouter.GET("", itemController.FindAll)
+	itemRouter.GET("/:id", itemController.FindById)
+	itemRouter.POST("", itemController.Create)
+	itemRouter.PUT("/:id", itemController.Update)
+	itemRouter.DELETE("/:id", itemController.Delete)
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
-
-	// 第二引数に実行する関数そのものを渡す
-	r.GET("/items", itemController.FindAll)
-	r.GET("/items/:id", itemController.FindById)
-	r.POST("/items", itemController.Create)
-	r.PUT("/items/:id", itemController.Update)
-	r.DELETE("/items/:id", itemController.Delete)
 
 	//8080でサーバーを起動
 	r.Run("localhost:8080")
