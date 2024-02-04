@@ -114,5 +114,9 @@ func (r *ItemRepository) FindById(itemId uint) (*models.Item, error) {
 	return &item, nil
 }
 func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
-	return nil, nil
+	result := r.db.Save(&updateItem)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &updateItem, nil
 }

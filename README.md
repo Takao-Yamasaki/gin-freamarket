@@ -33,10 +33,14 @@ curl http://localhost:8080/items/2
 ```
 curl -POST -H "Content-Type: application/json" -d "{\"name\": \"商品4\", \"price\": 4000, \"description\": \"Postの動作確認\"}" http://localhost:8080/items
 ```
+- Update関数
+```
+curl -X PUT -H "Content-Type: application/json" -d "{\"Name\":\"Update Test\"}" http://localhost:8080/items/1
+```
 
 ## myphpadmin
 ```
-http://localhost:81/browser/
+http://localhost:81
 ```
 
 ## GORM
