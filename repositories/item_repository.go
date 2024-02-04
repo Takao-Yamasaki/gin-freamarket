@@ -87,13 +87,22 @@ func (r *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
 	}
 	return &newItem, nil
 }
+
 func (r *ItemRepository) Delete(itemId uint) error {
-	// result := r.db.Delete(itemId)
-	// if result.Error != nil {
-	// 	return result.Error
-	// }
+	// 削除対象の商品を検索
+	deletelItem, err := r.FindById(itemId)
+	if err != nil {
+		return err
+	}
+
+	// 削除対象の商品を論理削除
+	result := r.db.Delete(deletelItem)
+	if result.Error != nil {
+		return result.Error
+	}
 	return nil
 }
+
 func (r *ItemRepository) FindAll() (*[]models.Item, error) {
 	var items []models.Item
 	result := r.db.Find(&items)
@@ -102,6 +111,7 @@ func (r *ItemRepository) FindAll() (*[]models.Item, error) {
 	}
 	return &items, nil
 }
+
 func (r *ItemRepository) FindById(itemId uint) (*models.Item, error) {
 	var item models.Item
 	result := r.db.First(&item, itemId)
@@ -113,6 +123,7 @@ func (r *ItemRepository) FindById(itemId uint) (*models.Item, error) {
 	}
 	return &item, nil
 }
+
 func (r *ItemRepository) Update(updateItem models.Item) (*models.Item, error) {
 	result := r.db.Save(&updateItem)
 	if result.Error != nil {

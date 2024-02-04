@@ -37,6 +37,10 @@ curl -POST -H "Content-Type: application/json" -d "{\"name\": \"商品4\", \"pri
 ```
 curl -X PUT -H "Content-Type: application/json" -d "{\"Name\":\"Update Test\"}" http://localhost:8080/items/1
 ```
+- Delete関数
+```
+curl -X DELETE http://localhost:8080/items/1
+```
 
 ## myphpadmin
 ```
