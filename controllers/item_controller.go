@@ -46,7 +46,7 @@ func (c *ItemController) FindById(ctx *gin.Context) {
 	item, err := c.service.FindById(uint(itemId))
 	if err != nil {
 		// repository層がエラーを返してきた場合
-		if err.Error() == "Item not found" {
+		if err.Error() == "item not found" {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
@@ -84,7 +84,7 @@ func (c *ItemController) Update(ctx *gin.Context) {
 	}
 	updatedItem, err := c.service.Update(uint(itemId), update)
 	if err != nil {
-		if err.Error() == "Item not found" {
+		if err.Error() == "item not found" {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
@@ -101,7 +101,7 @@ func (c *ItemController) Delete(ctx *gin.Context) {
 	}
 	err = c.service.Delete(uint(itemId))
 	if err != nil {
-		if err.Error() == "Item not found" {
+		if err.Error() == "item not found" {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
