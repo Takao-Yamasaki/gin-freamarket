@@ -1,7 +1,6 @@
 package main
 
 import (
-
 	"github.com/gin-gonic/gin"
 
 	"gin-fleamarket/controllers"
@@ -27,10 +26,17 @@ func main() {
 	itemService := services.NewItemService(itemRepository)
 	itemController := controllers.NewItemController(itemService)
 
+	authRepository := repositories.NewAuthRepository(db)
+	authServive := services.NewAuthService(authRepository)
+	authController := controllers.NewAuthController(authServive)
+
 	// ginのデフォルトルーターを指定し、rに格納
 	r := gin.Default()
 	// ルーターにエンドポイントを追加
 	// 第二引数に実行する関数そのものを渡す
+	authRouter := r.Group("/auth")
+	authRouter.POST("/signup", authController.Signup)
+
 	itemRouter := r.Group("/items")
 	itemRouter.GET("", itemController.FindAll)
 	itemRouter.GET("/:id", itemController.FindById)

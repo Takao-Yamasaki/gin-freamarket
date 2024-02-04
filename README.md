@@ -42,6 +42,11 @@ curl -X PUT -H "Content-Type: application/json" -d "{\"Name\":\"Update Test\"}" 
 curl -X DELETE http://localhost:8080/items/1
 ```
 
+- Signup関数
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"user1@example.com\", \"password\":\"user1pass\"}" http://localhost:8080/auth/signup
+```
+
 ## myphpadmin
 ```
 http://localhost:81
