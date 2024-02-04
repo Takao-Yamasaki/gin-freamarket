@@ -22,3 +22,15 @@ $ curl http://localhost:8080/items
 ```
 curl -POST -H "Content-Type: application/json" -d "{\"name\": \"商品4\", \"price\": 4000, \"description\": \"Postの動作確認\"}" http://localhost:8080/items
 ```
+
+## myphpadmin
+```
+http://localhost:81/browser/
+```
+
+## GORM
+```
+go get -u gorm.io/gorm
+go get -u gorm.io/driver/sqlite
+go get -u gorm.io/driver/postgres
+```

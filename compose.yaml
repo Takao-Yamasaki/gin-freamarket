@@ -1,0 +1,65 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:8.0.27
+    container_name: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - ./docker/mysql/mysqldata:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_USER: ${DB_ROOTUSER}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOTPASS}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_USERPASS}
+      TZ: 'Asia/Tokyo'
+    hostname: mysql
+    restart: always
+    user: root
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 81:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mysql
+      - PMA_USER=ginuser
+      - PMA_PASSWORD=ginpassword
+    depends_on:
+      - mysql  
+
+# TODO: postgresとpgadminを使用する場合は、こちら
+# version: "3.8"
+# services:
+#   postgres:
+#     image: postgres:16-alpine
+#     container_name: postgres
+#     ports:
+#       - 5432:5432
+#     volumes:
+#       - ./docker/postgres/init.d:/docker-entrypoint-initdb.d
+#       - ./docker/postgres/pgdata:/var/lib/postgresql/data
+#     environment:
+#       POSTGRES_USER: ginuser
+#       POSTGRES_PASSWORD: ginpassword
+#       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
+#       POSTGRES_DB: fleamarket
+#     hostname: postgres
+#     restart: always
+#     user: root
+
+#   pgadmin:
+#     image: dpage/pgadmin4
+#     restart: always
+#     ports:
+#       - 81:80
+#     environment:
+#       PGADMIN_DEFAULT_EMAIL: gin@example.com
+#       PGADMIN_DEFAULT_PASSWORD: ginpassword
+#     volumes:
+#       - ./docker/pgadmin:/var/lib/pgadmin
+#     depends_on:
+#       - postgres
