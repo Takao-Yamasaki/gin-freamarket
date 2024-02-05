@@ -3,7 +3,10 @@ package services
 import (
 	"gin-fleamarket/models"
 	"gin-fleamarket/repositories"
+	"os"
+	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -49,7 +52,28 @@ func (s *AuthService) Login(email string, password string) (*string, error) {
 		return nil, err
 	}
 
-	// TODO: トークンの生成処理
+	// JWTトークンの生成処理を行う
+	token, err := CreateToken(foundUser.ID, foundUser.Email)
+	if err != nil {
+		return nil, err
+	}
 
-	return &foundUser.Email, nil
+	return token, nil
+}
+
+// JWTトークンの生成処理を行う関数
+func CreateToken(userId uint, email string) (*string, error) {
+	// トークンの生成
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub":   userId,                           // subject/ユーザー識別子を表す
+		"email": email,                            // ユーザーのemail
+		"exp":   time.Now().Add(time.Hour).Unix(), // トークンの有効期限/生成から1時間
+	})
+
+	// 秘密鍵を使って署名を行う
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET_KEY")))
+	if err != nil {
+		return nil, err
+	}
+	return &tokenString, nil
 }
