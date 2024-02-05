@@ -46,6 +46,10 @@ curl -X DELETE http://localhost:8080/items/1
 ```
 curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"user1@example.com\", \"password\":\"user1pass\"}" http://localhost:8080/auth/signup
 ```
+- Login関数
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"user1@example.com\", \"password\":\"user1pass\"}" http://localhost:8080/auth/login
+```
 
 ## myphpadmin
 ```

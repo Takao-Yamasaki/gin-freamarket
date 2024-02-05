@@ -25,17 +25,17 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 	// 第二引数に実行する関数そのものを渡す
 	// ginのデフォルトルーターを指定し、rに格納
 	r := gin.Default()
-
-	authRouter := r.Group("/auth")
-	authRouter.POST("/signup", authController.Signup)
-
 	itemRouter := r.Group("/items")
+	authRouter := r.Group("/auth")
+
 	itemRouter.GET("", itemController.FindAll)
 	itemRouter.GET("/:id", itemController.FindById)
 	itemRouter.POST("", itemController.Create)
 	itemRouter.PUT("/:id", itemController.Update)
 	itemRouter.DELETE("/:id", itemController.Delete)
 
+	authRouter.POST("/signup", authController.Signup)
+	authRouter.POST("/login", authController.Login)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
