@@ -50,6 +50,10 @@ curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"user1@example.
 ```
 curl -X POST -H "Content-Type: application/json" -d "{\"email\":\"user1@example.com\", \"password\":\"user1pass\"}" http://localhost:8080/auth/login
 ```
+-  Create関数(認証付き)
+```
+curl -POST -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGV4YW1wbGUuY29tIiwiZXhwIjoxNzA3MjMzMzkyLCJzdWIiOjJ9.8pLhswOhbKnuym5ASsS6dO0pvAbJfIozrGXYl3vLz0s" -d "{\"name\": \"商品4\", \"price\": 4000, \"description\": \"Postの動作確認\"}" http://localhost:8080/items
+```
 
 ## myphpadmin
 ```
