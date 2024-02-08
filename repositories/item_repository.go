@@ -11,10 +11,10 @@ import (
 // リポジトリが満たすべきメソッドの定義を記述
 type IItemRepository interface {
 	FindAll() (*[]models.Item, error)
-	FindById(itemId uint) (*models.Item, error)
+	FindById(itemId uint, userId uint) (*models.Item, error)
 	Create(newItem models.Item) (*models.Item, error)
 	Update(updateItem models.Item) (*models.Item, error)
-	Delete(itemId uint) error
+	Delete(itemId uint, useId uint) error
 }
 
 // 上記インターフェースを満たす具体的な実装
@@ -34,7 +34,7 @@ func (r *ItemMemoryRepository) FindAll() (*[]models.Item, error) {
 }
 
 // 商品IDによる検索を行うメソッド
-func (r *ItemMemoryRepository) FindById(itemId uint) (*models.Item, error) {
+func (r *ItemMemoryRepository) FindById(itemId uint, userId uint) (*models.Item, error) {
 	for _, item := range r.items {
 		if item.ID == itemId {
 			return &item, nil
@@ -62,9 +62,9 @@ func (r *ItemMemoryRepository) Update(updateItem models.Item) (*models.Item, err
 }
 
 // 商品情報を削除するメソッド
-func (r *ItemMemoryRepository) Delete(itemId uint) error {
+func (r *ItemMemoryRepository) Delete(itemId uint, userId uint) error {
 	for i, v := range r.items {
-		if v.ID == itemId {
+		if v.ID == itemId && v.UserID == userId {
 			r.items = append(r.items[:i], r.items[i+1:]...)
 			return nil
 		}
@@ -88,9 +88,9 @@ func (r *ItemRepository) Create(newItem models.Item) (*models.Item, error) {
 	return &newItem, nil
 }
 
-func (r *ItemRepository) Delete(itemId uint) error {
+func (r *ItemRepository) Delete(itemId uint, userId uint) error {
 	// 削除対象の商品を検索
-	deletelItem, err := r.FindById(itemId)
+	deletelItem, err := r.FindById(itemId, userId)
 	if err != nil {
 		return err
 	}
@@ -112,9 +112,9 @@ func (r *ItemRepository) FindAll() (*[]models.Item, error) {
 	return &items, nil
 }
 
-func (r *ItemRepository) FindById(itemId uint) (*models.Item, error) {
+func (r *ItemRepository) FindById(itemId uint, userId uint) (*models.Item, error) {
 	var item models.Item
-	result := r.db.First(&item, itemId)
+	result := r.db.First(&item, "id = ? AND user_id = ?", itemId, userId)
 	if result.Error != nil {
 		if result.Error.Error() == "record not found" {
 			return nil, errors.New("item not found")

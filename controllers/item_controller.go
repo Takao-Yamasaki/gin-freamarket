@@ -37,6 +37,16 @@ func (c *ItemController) FindAll(ctx *gin.Context) {
 }
 
 func (c *ItemController) FindById(ctx *gin.Context) {
+	// リクエストからユーザー情報を取得
+	user, exists := ctx.Get("user")
+	if !exists {
+		// 401 Unauthorizedを返却
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	userId := user.(*models.User).ID
+
 	// 商品IDはパスパラメータから取得
 	itemId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
@@ -44,7 +54,7 @@ func (c *ItemController) FindById(ctx *gin.Context) {
 		return
 	}
 
-	item, err := c.service.FindById(uint(itemId))
+	item, err := c.service.FindById(uint(itemId), userId)
 	if err != nil {
 		// repository層がエラーを返してきた場合
 		if err.Error() == "item not found" {
@@ -83,6 +93,16 @@ func (c *ItemController) Create(ctx *gin.Context) {
 }
 
 func (c *ItemController) Update(ctx *gin.Context) {
+	// リクエストからユーザー取得
+	user, exists := ctx.Get("user")
+	if !exists {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	// 型アサーション
+	userId := user.(*models.User).ID
+
 	var update dto.UpdateItemInput
 	itemId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
@@ -93,7 +113,7 @@ func (c *ItemController) Update(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	updatedItem, err := c.service.Update(uint(itemId), update)
+	updatedItem, err := c.service.Update(uint(itemId), userId, update)
 	if err != nil {
 		if err.Error() == "item not found" {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
@@ -105,12 +125,22 @@ func (c *ItemController) Update(ctx *gin.Context) {
 }
 
 func (c *ItemController) Delete(ctx *gin.Context) {
+	// リクエストからユーザー取得
+	user, exists := ctx.Get("user")
+	if !exists {
+		ctx.AbortWithStatus(http.StatusUnauthorized)
+		return
+	}
+
+	// 型アサーション
+	userId := user.(*models.User).ID
+
 	itemId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid id"})
 		return
 	}
-	err = c.service.Delete(uint(itemId))
+	err = c.service.Delete(uint(itemId), userId)
 	if err != nil {
 		if err.Error() == "item not found" {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

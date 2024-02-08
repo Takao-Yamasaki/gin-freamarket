@@ -8,10 +8,10 @@ import (
 
 type IItemService interface {
 	FindAll() (*[]models.Item, error)
-	FindById(itemId uint) (*models.Item, error)
+	FindById(itemId uint, userId uint) (*models.Item, error)
 	Create(createItemInput dto.CreateItemInput, userId uint) (*models.Item, error)
-	Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error)
-	Delete(itemId uint) error
+	Update(itemId uint, userId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error)
+	Delete(itemId uint, userId uint) error
 }
 
 type ItemService struct {
@@ -29,8 +29,8 @@ func (s *ItemService) FindAll() (*[]models.Item, error) {
 }
 
 // FindByIdメソッドを返すメソッド
-func (s *ItemService) FindById(itemId uint) (*models.Item, error) {
-	return s.repository.FindById(itemId)
+func (s *ItemService) FindById(itemId uint, userId uint) (*models.Item, error) {
+	return s.repository.FindById(itemId, userId)
 }
 
 // Createメソッドを返すメソッド
@@ -46,8 +46,8 @@ func (s *ItemService) Create(createItemInput dto.CreateItemInput, userId uint) (
 }
 
 // Updateメソッドを返すメソッド
-func (s *ItemService) Update(itemId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error) {
-	targetItem, err := s.FindById(itemId)
+func (s *ItemService) Update(itemId uint, userId uint, updateItemInput dto.UpdateItemInput) (*models.Item, error) {
+	targetItem, err := s.FindById(itemId, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +67,6 @@ func (s *ItemService) Update(itemId uint, updateItemInput dto.UpdateItemInput) (
 	return s.repository.Update(*targetItem)
 }
 
-func (s *ItemService) Delete(itemId uint) error {
-	return s.repository.Delete(itemId)
+func (s *ItemService) Delete(itemId uint, userId uint) error {
+	return s.repository.Delete(itemId, userId)
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
@@ -26,12 +27,17 @@ func setupRouter(db *gorm.DB) *gin.Engine {
 	// 第二引数に実行する関数そのものを渡す
 	// ginのデフォルトルーターを指定し、rに格納
 	r := gin.Default()
+	// 全てのオリジンを許可
+	r.Use(cors.Default())
 	itemRouter := r.Group("/items")
+	// 認証必須のルートグループ
 	itemRouterWithAuth := r.Group("/items", middlewares.AuthMiddleware(authServive))
 	authRouter := r.Group("/auth")
 
 	itemRouter.GET("", itemController.FindAll)
-	itemRouter.GET("/:id", itemController.FindById)
+	// 商品検索は認証必須
+	itemRouterWithAuth.GET("/:id", itemController.FindById)
+	// 商品作成は認証必須
 	itemRouterWithAuth.POST("", itemController.Create)
 	itemRouter.PUT("/:id", itemController.Update)
 	itemRouter.DELETE("/:id", itemController.Delete)
