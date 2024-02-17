@@ -7,6 +7,10 @@ go get -u github.com/gin-gonic/gin
 ```
 go run main.go
 ```
+## airの起動
+```
+air
+```
 ## curlで確認
 - Ping
 ```
@@ -64,9 +68,14 @@ curl -POST -H "Content-Type: application/json" -H "Authorization: Bearer eyJhbGc
 http://localhost:81
 ```
 
-## GORM
+## GORMのインストール
 ```
 go get -u gorm.io/gorm
 go get -u gorm.io/driver/sqlite
 go get -u gorm.io/driver/postgres
 ```
+
+## TODO
+- テストケースの追加
+- cookieを使った認証
+- memchacheの使用
