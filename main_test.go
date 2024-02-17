@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"gin-fleamarket/dto"
 	"gin-fleamarket/infra"
 	"gin-fleamarket/models"
+	"gin-fleamarket/services"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -81,5 +84,40 @@ func TestFindAll(t *testing.T) {
 }
 
 // TODO: 他の関数のテストを作成すること
+
+// 認証が必要なテスト
+func TestCreate(t *testing.T) {
+	// テストの初期化
+	router := setup()
+
+	// 認証用のトークンを生成
+	token, err := services.CreateToken(1, "test1@example.com")
+	// エラーがあればテストを失敗させる
+	assert.Equal(t, nil, err)
+
+	// 商品作成
+	createItemInput := dto.CreateItemInput{
+		Name:        "テストアイテム4",
+		Price:       4000,
+		Description: "Createテスト",
+	}
+	reqBody, _ := json.Marshal(createItemInput)
+
+	w := httptest.NewRecorder()
+	// bytes.NewBufferは、requestBodyに変換する役割
+	req, _ := http.NewRequest("POST", "/items", bytes.NewBuffer(reqBody))
+	req.Header.Set("Authorization", "Bearer "+*token)
+
+	// APIリクエストの実行
+	router.ServeHTTP(w, req)
+
+	// APIの実行結果を取得
+	var res map[string]models.Item
+	json.Unmarshal([]byte(w.Body.Bytes()), &res)
+
+	// アサーション
+	assert.Equal(t, http.StatusCreated, w.Code)
+	assert.Equal(t, uint(4), res["data"].ID)
+}
 
 // TODO: 異常系のテストも追加すること
